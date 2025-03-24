@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Workflow System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #0070f3;
+            --primary-hover: #0060df;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --green-dark: #059669;
+            --yellow: #f59e0b;
+            --yellow-light: #fef3c7;
+            --yellow-dark: #d97706;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --red-dark: #dc2626;
+            --gray: #6b7280;
+            --gray-light: #f3f4f6;
+            --gray-dark: #374151;
+            --border: #e5e7eb;
+            --bg-muted: #f9fafb;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #111827;
+            background-color: #f9fafb;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 750px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .items-start {
+            align-items: flex-start;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .gap-3 {
+            gap: 0.75rem;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mr-1 {
+            margin-right: 0.25rem;
+        }
+
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        .mr-4 {
+            margin-right: 1rem;
+        }
+
+        .ml-2 {
+            margin-left: 0.5rem;
+        }
+
+        .p-1 {
+            padding: 0.25rem;
+        }
+
+        .p-2 {
+            padding: 0.5rem;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
+        .p-4 {
+            padding: 1rem;
+        }
+
+        .p-6 {
+            padding: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-green {
+            color: var(--green);
+        }
+
+        .text-yellow {
+            color: var(--yellow);
+        }
+
+        .text-red {
+            color: var(--red);
+        }
+
+        .bg-muted {
+            background-color: var(--bg-muted);
+        }
+
+        .bg-green-light {
+            background-color: var(--green-light);
+        }
+
+        .bg-yellow-light {
+            background-color: var(--yellow-light);
+        }
+
+        .bg-red-light {
+            background-color: var(--red-light);
+        }
+
+        .rounded-md {
+            border-radius: 0.375rem;
+        }
+
+        .rounded-full {
+            border-radius: 9999px;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .space-y-2 > * + * {
+            margin-top: 0.5rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        .space-y-6 > * + * {
+            margin-top: 1.5rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-green {
+            background-color: var(--green);
+            color: white;
+        }
+
+        .badge-yellow {
+            background-color: var(--yellow);
+            color: white;
+        }
+
+        .badge-red {
+            background-color: var(--red);
+            color: white;
+        }
+
+        .badge-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            border: none;
+        }
+
+        .button-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .button-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--gray-dark);
+        }
+
+        .button-outline:hover {
+            background-color: var(--gray-light);
+        }
+
+        .button-danger {
+            background-color: var(--red);
+            color: white;
+        }
+
+        .button-danger:hover {
+            background-color: var(--red-dark);
+        }
+
+        .separator {
+            height: 1px;
+            background-color: var(--border);
+            width: 100%;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .absolute {
+            position: absolute;
+        }
+
+        .connector-line {
+            position: absolute;
+            left: 16px;
+            top: 32px;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border);
+        }
+
+        .icon-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            margin-right: 1rem;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: var(--bg-muted);
+            border-radius: 0.375rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .approver-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--bg-muted);
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .approver-chip.approved {
+            background-color: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        .approver-chip.pending {
+            background-color: var(--yellow-light);
+            color: var(--yellow-dark);
+        }
+
+        .approver-chip.rejected {
+            background-color: var(--red-light);
+            color: var(--red-dark);
+        }
+
+        .approver-chip.waiting {
+            background-color: var(--gray-light);
+            color: var(--gray);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .gap-6 {
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <main class="flex items-center justify-center p-4">
+        <div class="container">
+            <h1 class="text-2xl font-bold mb-6 text-center">审批流系统</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="card-title">采购付款审批</h2>
+                            <p class="card-description">申请编号: REQ-2023-001</p>
+                        </div>
+                        <span id="status-badge" class="badge badge-yellow">
+                            <svg class="mr-1" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            审批中
+                        </span>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 mt-4 text-sm text-muted">
+                        <div class="flex items-center">
+                            <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>申请人: Alex Johnson</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>部门: Marketing</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>提交时间: 2023-06-10</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-content space-y-6">
+                    <!-- Request Details Section -->
+                    <div>
+                        <h3 class="section-title">详情内容</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-medium text-muted mb-1">项目编号</h4>
+                                    <p class="text-lg font-semibold">PRJ-MKT-2023-Q2</p>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="text-sm font-medium text-muted mb-1">采购单号</h4>
+                                    <p class="text-lg font-semibold">PO-2023-4872</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-medium text-muted mb-1">采购总额</h4>
+                                    <p class="text-lg font-semibold">$15,000</p>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="text-sm font-medium text-muted mb-1">申请采购付款总额</h4>
+                                    <p class="text-lg font-semibold">$5,800</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-sm font-medium text-muted mb-1">备注信息</h4>
+                                <p>为了提供方便快捷的审批方式，我们优化审批流程，强化部分信息的输入，让审批人更快速的审批申请单，同时，提高审批效率.</p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-sm font-medium text-muted mb-2">附件内容</h4>
+                                <div class="space-y-2">
+                                    <div class="document-item">
+                                        <svg class="mr-2 text-blue-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span>Budget Breakdown.xlsx</span>
+                                    </div>
+                                    <div class="document-item">
+                                        <svg class="mr-2 text-blue-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <span>Campaign Proposal.pdf</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Approval Flow Section -->
+                    <div class="mt-6">
+                        <h3 class="section-title">审批流程</h3>
+                        
+                        <div id="approval-steps" class="space-y-6">
+                            <!-- Approval steps will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div id="status-message" class="text-sm text-muted mb-4">
+                        <span class="flex items-center">
+                            <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            待审批节点: 财务组
+                        </span>
+                    </div>
+                    
+                    <div id="approval-section" class="space-y-4">
+                        <div id="comments-section">
+                            <label for="approval-comments" class="label">审批意见</label>
+                            <textarea id="approval-comments" placeholder="请输入审批意见..."></textarea>
+                        </div>
+                        
+                        <div id="action-buttons" class="flex gap-2 justify-end">
+                            <button id="reject-button" class="button button-danger">
+                                驳回
+                            </button>
+                            <button id="approve-button" class="button button-primary">
+                                同意
+                                <svg class="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample data with multiple approvers per step
+        const approvalData = {
+            status: "pending",
+            currentApproverLevel: "Finance Manager",
+            approvalSteps: [
+                {
+                    id: 1,
+                    name: "部门经理",
+                    status: "approved",
+                    approvers: [
+                        { id: 1, name: "陈雅菲", status: "approved", date: "2023-06-11", comments: "Looks good, within department guidelines." },
+                        { id: 2, name: "戴威廉", status: "approved", date: "2023-06-11", comments: "Approved. Budget aligns with our quarterly goals." }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "财务组",
+                    status: "pending",
+                    approvers: [
+                        { id: 3, name: "谢迈克", status: "pending", date: null, comments: null },
+                        { id: 4, name: "爱丽莎", status: "pending", date: null, comments: null }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "VP",
+                    status: "waiting",
+                    approvers: [
+                        { id: 5, name: "Jennifer Smith", status: "waiting", date: null, comments: null }
+                    ]
+                }
+            ]
+        };
+
+        // Current user (for demo purposes)
+        const currentUser = {
+            id: 3,
+            name: "Michael Rodriguez",
+            role: "Finance Manager"
+        };
+
+        // Initialize the UI
+        document.addEventListener('DOMContentLoaded', function() {
+            renderApprovalSteps();
+            
+            // Update UI to ensure action buttons are properly hidden/shown
+            updateUI();
+            
+            // Set up event listeners
+            document.getElementById('approve-button').addEventListener('click', () => {
+                const comments = document.getElementById('approval-comments').value;
+                approveRequest(comments);
+            });
+            
+            document.getElementById('reject-button').addEventListener('click', () => {
+                const comments = document.getElementById('approval-comments').value;
+                rejectRequest(comments);
+            });
+        });
+
+        // Render approval steps
+        function renderApprovalSteps() {
+            const stepsContainer = document.getElementById('approval-steps');
+            stepsContainer.innerHTML = '';
+            
+            approvalData.approvalSteps.forEach((step, index) => {
+                const isLastStep = index === approvalData.approvalSteps.length - 1;
+                
+                const stepElement = document.createElement('div');
+                stepElement.className = 'relative';
+                
+                // Add connector line if not the last step
+                if (!isLastStep) {
+                    const connectorLine = document.createElement('div');
+                    connectorLine.className = 'connector-line';
+                    stepElement.appendChild(connectorLine);
+                }
+                
+                const stepContent = document.createElement('div');
+                stepContent.className = 'flex items-start';
+                
+                // Icon container
+                const iconContainer = document.createElement('div');
+                let iconClass = 'bg-muted';
+                let iconSvg = '';
+                
+                if (step.status === 'approved') {
+                    iconClass = 'bg-green-light';
+                    iconSvg = `<svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>`;
+                } else if (step.status === 'pending') {
+                    iconClass = 'bg-yellow-light';
+                    iconSvg = `<svg class="icon text-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>`;
+                } else if (step.status === 'rejected') {
+                    iconClass = 'bg-red-light';
+                    iconSvg = `<svg class="icon text-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>`;
+                } else {
+                    iconSvg = `<svg class="icon text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>`;
+                }
+                
+                iconContainer.className = `icon-container ${iconClass}`;
+                iconContainer.innerHTML = iconSvg;
+                stepContent.appendChild(iconContainer);
+                
+                // Step details
+                const stepDetails = document.createElement('div');
+                stepDetails.className = 'flex-1';
+                
+                // Step header
+                const stepHeader = document.createElement('div');
+                stepHeader.className = 'flex justify-between items-start';
+                
+                const stepName = document.createElement('h4');
+                stepName.className = 'font-medium';
+                stepName.textContent = step.name;
+                
+                const stepStatus = document.createElement('span');
+                stepStatus.className = 'text-sm';
+                
+                if (step.status === 'approved') {
+                    stepStatus.className += ' text-green';
+                    stepStatus.textContent = 'Approved';
+                } else if (step.status === 'pending') {
+                    stepStatus.className += ' text-yellow';
+                    stepStatus.textContent = 'In Progress';
+                } else if (step.status === 'rejected') {
+                    stepStatus.className += ' text-red';
+                    stepStatus.textContent = 'Rejected';
+                } else {
+                    stepStatus.className += ' text-muted';
+                    stepStatus.textContent = 'Waiting';
+                }
+                
+                stepHeader.appendChild(stepName);
+                stepHeader.appendChild(stepStatus);
+                stepDetails.appendChild(stepHeader);
+                
+                // Approvers section
+                const approversSection = document.createElement('div');
+                approversSection.className = 'mt-2';
+                
+                const approversLabel = document.createElement('div');
+                approversLabel.className = 'text-sm font-medium text-muted mb-2';
+                approversLabel.textContent = '审批人:';
+                approversSection.appendChild(approversLabel);
+                
+                const approversContainer = document.createElement('div');
+                approversContainer.className = 'flex flex-wrap';
+                
+                step.approvers.forEach(approver => {
+                    const approverChip = document.createElement('div');
+                    approverChip.className = `approver-chip ${approver.status}`;
+                    
+                    // Highlight current user
+                    if (approver.id === currentUser.id) {
+                        approverChip.style.border = '2px solid var(--primary)';
+                    }
+                    
+                    approverChip.textContent = approver.name;
+                    approversContainer.appendChild(approverChip);
+                });
+                
+                approversSection.appendChild(approversContainer);
+                stepDetails.appendChild(approversSection);
+                
+                // Comments section for approved or rejected steps
+                const hasComments = step.approvers.some(approver => approver.comments);
+                if (hasComments) {
+                    const commentsSection = document.createElement('div');
+                    commentsSection.className = 'mt-3';
+                    
+                    step.approvers.forEach(approver => {
+                        if (approver.comments) {
+                            const commentBlock = document.createElement('div');
+                            commentBlock.className = 'mt-2 p-2 bg-muted rounded-md text-sm';
+                            
+                            const commentHeader = document.createElement('p');
+                            commentHeader.className = 'font-medium';
+                            commentHeader.textContent = `${approver.name}'s Comments:`;
+                            
+                            const commentText = document.createElement('p');
+                            commentText.textContent = approver.comments;
+                            
+                            commentBlock.appendChild(commentHeader);
+                            commentBlock.appendChild(commentText);
+                            commentsSection.appendChild(commentBlock);
+                        }
+                    });
+                    
+                    stepDetails.appendChild(commentsSection);
+                }
+                
+                stepContent.appendChild(stepDetails);
+                stepElement.appendChild(stepContent);
+                stepsContainer.appendChild(stepElement);
+            });
+        }
+
+        // Approve request with comments
+        function approveRequest(comments) {
+            // Find current user's approver record
+            const currentStep = approvalData.approvalSteps.find(step => step.status === 'pending');
+            if (!currentStep) return;
+            
+            const currentApprover = currentStep.approvers.find(approver => approver.id === currentUser.id);
+            if (!currentApprover) return;
+            
+            // Update approver status
+            currentApprover.status = 'approved';
+            currentApprover.date = new Date().toISOString().split('T')[0];
+            currentApprover.comments = comments || 'Approved';
+            
+            // Check if all approvers at this level have approved
+            const allApproved = currentStep.approvers.every(approver => approver.status === 'approved');
+            
+            if (allApproved) {
+                // Mark current step as approved
+                currentStep.status = 'approved';
+                
+                // Find next step to activate
+                const currentStepIndex = approvalData.approvalSteps.findIndex(step => step.id === currentStep.id);
+                const nextStep = approvalData.approvalSteps[currentStepIndex + 1];
+                
+                if (nextStep) {
+                    // Activate next step
+                    nextStep.status = 'pending';
+                    nextStep.approvers.forEach(approver => {
+                        approver.status = 'pending';
+                    });
+                    
+                    // Update current approver level
+                    approvalData.currentApproverLevel = nextStep.name;
+                } else {
+                    // All steps approved
+                    approvalData.status = 'approved';
+                    approvalData.currentApproverLevel = 'None';
+                }
+            }
+            
+            // Update UI
+            updateUI();
+        }
+
+        // Reject request with comments
+        function rejectRequest(comments) {
+            // Find current user's approver record
+            const currentStep = approvalData.approvalSteps.find(step => step.status === 'pending');
+            if (!currentStep) return;
+            
+            const currentApprover = currentStep.approvers.find(approver => approver.id === currentUser.id);
+            if (!currentApprover) return;
+            
+            // Update approver status
+            currentApprover.status = 'rejected';
+            currentApprover.date = new Date().toISOString().split('T')[0];
+            currentApprover.comments = comments || 'Rejected';
+            
+            // Mark current step as rejected
+            currentStep.status = 'rejected';
+            
+            // Mark request as rejected
+            approvalData.status = 'rejected';
+            approvalData.currentApproverLevel = 'None';
+            
+            // Update UI
+            updateUI();
+        }
+        
+        function updateUI() {
+            // Render approval steps
+            renderApprovalSteps();
+            
+            // Update status badge
+            const statusBadge = document.getElementById('status-badge');
+            if (approvalData.status === "approved") {
+                statusBadge.className = "badge badge-green";
+                statusBadge.innerHTML = `
+                    <svg class="mr-1" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Approved
+                `;
+            } else if (approvalData.status === "rejected") {
+                statusBadge.className = "badge badge-red";
+                statusBadge.innerHTML = `
+                    <svg class="mr-1" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Rejected
+                `;
+            }
+            
+            // Update status message
+            const statusMessage = document.getElementById('status-message');
+            if (approvalData.status === "approved") {
+                statusMessage.className = "text-sm text-green mb-4";
+                statusMessage.innerHTML = `
+                    <span class="flex items-center">
+                        <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        This request has been fully approved
+                    </span>
+                `;
+            } else if (approvalData.status === "rejected") {
+                statusMessage.className = "text-sm text-red mb-4";
+                statusMessage.innerHTML = `
+                    <span class="flex items-center">
+                        <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        This request has been rejected
+                    </span>
+                `;
+            } else {
+                statusMessage.innerHTML = `
+                    <span class="flex items-center">
+                        <svg class="mr-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        待审批组: ${approvalData.currentApproverLevel}
+                    </span>
+                `;
+            }
+            
+            // Hide/show approval section
+            const approvalSection = document.getElementById('approval-section');
+            
+            // Only show approval section if the current user is a pending approver
+            const isCurrentUserPendingApprover = approvalData.approvalSteps.some(step => 
+                step.status === 'pending' && 
+                step.approvers.some(approver => 
+                    approver.id === currentUser.id && approver.status === 'pending'
+                )
+            );
+            
+            if (approvalData.status === "approved" || approvalData.status === "rejected" || !isCurrentUserPendingApprover) {
+                approvalSection.classList.add('hidden');
+            } else {
+                approvalSection.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
